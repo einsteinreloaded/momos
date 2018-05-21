@@ -1,0 +1,17 @@
+{
+  "name": "samosa",
+  "version": "0.0.1",
+  "description": "another js bundler!",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "bundler"
+  ],
+  "author": "khubo",
+  "license": "MIT",
+  "dependencies": {
+    "esprima": "^4.0.0"
+  }
+}
