@@ -68,10 +68,10 @@ function bundle(entryFile) {
     for (let req of module.requires) {
       let content = module.content
       let length = req.loc[1] - req.loc[0]
-      let loadPart = createLoadPartOflength(req.id, length);
-      let slice1 = content.slice(0, req.loc[0])
-      let slice2 = content.slice(req.loc[1])
-      module.content = slice1 + loadPart + slice2
+      let requirePart = createLoadPartOflength(req.id, length);
+      let before = content.slice(0, req.loc[0])
+      let after = content.slice(req.loc[1])
+      module.content = before + requirePart + after
     }
 
     return module.content
