@@ -1,6 +1,7 @@
 const fs = require('fs')
 const path = require('path')
 const esprima = require('esprima')
+const template = require('./template')
 
 // entry function
 // @params {String} entryFile
@@ -94,7 +95,9 @@ function bundle(entryFile) {
     .sort((a, b) => a.id - b.id)
     .map(bakeIntoFunction)
 
-  console.log(JSON.stringify(modulesArray))
+  let content = modulesArray.map(module => `${module}`).join(',')
+  let bundle = template.replace(/\{\{modules\}\}/, content);
+  fs.writeFileSync('./dist.js', bundle)
 }
 
 
