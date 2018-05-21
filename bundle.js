@@ -2,24 +2,8 @@ const fs = require('fs')
 const path = require('path')
 const esprima = require('esprima')
 
-/***
- * 
- *  Idea is to write a simple bundler. 
- *  It bundles through 3 steps.
- *    - Through entry file, recursively reads all `requires` and load them into a module object 
- *          with their key as path, also assign them an id
- *    - In each file replace the require object loaded in the memory
- *    - Write this in the bundler template file
- * 
- */
-
-function Module(id, content) {
-  this.id = id
-  this.content = content
-}
-
 // entry function
-// @params entryFile
+// @params {String} entryFile
 function bundle(entryFile) {
   const modules = {}
   let id = 0
@@ -35,19 +19,16 @@ function bundle(entryFile) {
     id++
 
     if (!parsed) return
+    // requires only Variable declarations 
     const items = parsed.body.filter(item => item.type === 'VariableDeclaration')
 
     items.forEach(item => {
       item.declarations.forEach(dec => {
-        try {
-          if (dec.init['callee'].name === 'require') {
-            let moduleName = dec.init['arguments'][0].value
-            let src = path.resolve(path.dirname(file), moduleName)
-            fetchModules(src)
-          }
-        }
-        catch (e) {
-
+        if (dec.init['callee'].name === 'require') {
+          let moduleName = dec.init['arguments'][0].value
+          let src = path.resolve(path.dirname(file), moduleName)
+          // recursively fetch modules inside this file
+          fetchModules(src)
         }
       })
     })
